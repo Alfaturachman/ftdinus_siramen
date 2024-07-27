@@ -59,7 +59,6 @@ class Mod_pi extends CI_Model
     public function add_pi($data)
     {
         date_default_timezone_set('Asia/Jakarta');
-        // Prepare data for insertion
         $data = array(
             'cpl_pin' => $data['cpl_pin'],
             'ina_pin' => $data['ina_pin'],
@@ -71,14 +70,14 @@ class Mod_pi extends CI_Model
         return $this->db->insert('srm_pin', $data);
     }
 
-    // Update data pin
+    // Update data performa index
     public function update_pi($id, $data)
     {
         $this->db->where('idx_pin', $id);
         return $this->db->update('srm_pin', $data);
     }
 
-    // Hapus data pin
+    // Hapus data performa index
     public function delete_pi($id)
     {
         return $this->db->delete('srm_pin', array('idx_skf' => $id));

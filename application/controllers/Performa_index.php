@@ -9,7 +9,6 @@ class Performa_index extends CI_Controller
         $this->load->model('Mod_pi');
     }
 
-    // Tampilkan daftar cpl
     public function index()
     {
         if ($this->session->userdata('logged_in')) {
@@ -22,7 +21,7 @@ class Performa_index extends CI_Controller
         }
     }
 
-    // Tambah cpl
+    // Tambah performa index
     public function add()
     {
         date_default_timezone_set('Asia/Jakarta');
@@ -30,7 +29,7 @@ class Performa_index extends CI_Controller
             // Load form validation library
             $this->load->library('form_validation');
 
-            // Set validation rules for CPL fields
+            // Set validation rules for performa index fields
             $this->form_validation->set_rules('cpl_pin', 'ID CPL', 'required|integer');
             $this->form_validation->set_rules('ina_pin', 'Deskripsi PI Indonesia', 'required');
             $this->form_validation->set_rules('eng_pin', 'Deskripsi PI Inggris', 'required');
@@ -56,12 +55,12 @@ class Performa_index extends CI_Controller
                 if ($this->Mod_pi->add_pi($data)) {
                     $this->output
                         ->set_content_type('application/json')
-                        ->set_output(json_encode(array('success' => 'CPL berhasil ditambahkan')));
+                        ->set_output(json_encode(array('success' => 'performa index berhasil ditambahkan')));
                 } else {
                     $this->output
                         ->set_status_header(500)
                         ->set_content_type('application/json')
-                        ->set_output(json_encode(array('error' => 'Gagal menambahkan CPL')));
+                        ->set_output(json_encode(array('error' => 'Gagal menambahkan performa index')));
                 }
             }
         } else {
@@ -73,7 +72,7 @@ class Performa_index extends CI_Controller
         }
     }
 
-    // Edit cpl
+    // Edit performa index
     public function edit($id)
     {
         if ($this->session->userdata('logged_in')) {
@@ -94,7 +93,7 @@ class Performa_index extends CI_Controller
         }
     }
 
-    // Update cpl
+    // Update performa index
     public function update()
     {
         if ($this->session->userdata('logged_in')) {
@@ -129,7 +128,7 @@ class Performa_index extends CI_Controller
                     $this->output
                         ->set_status_header(500)
                         ->set_content_type('application/json')
-                        ->set_output(json_encode(array('error' => 'Gagal memperbarui CPL')));
+                        ->set_output(json_encode(array('error' => 'Gagal memperbarui performa index')));
                 }
             }
         } else {
@@ -140,12 +139,12 @@ class Performa_index extends CI_Controller
         }
     }
 
-    // Hapus Soft cpl
+    // Hapus Soft performa index
     public function delete($id)
     {
         if ($this->session->userdata('logged_in')) {
-            $this->Mod_pi->delete_cpl($id);
-            redirect('cpl');
+            $this->Mod_pi->delete_pi($id);
+            redirect('performa_index');
         } else {
             redirect('auth');
         }
