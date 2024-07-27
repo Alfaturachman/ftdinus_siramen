@@ -54,8 +54,9 @@
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-body p-0">
                         <div class="p-5">
-                            <div class="text-center">
-                                <h1 class="h4 mb-4">Selamat Datang Kembali</h1>
+                            <div class="text-center mb-4">
+                                <h4 class="h4">Selamat Datang</h4>
+                                <p class="text-gray-700">Silahkan login terlebih dahulu</p>
                             </div>
                             <form class="user" id="loginForm">
                                 <div id="loginError" class="alert alert-danger d-none" role="alert"></div>

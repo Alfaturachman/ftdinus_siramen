@@ -9,7 +9,6 @@ class Mod_pi extends CI_Model
         $this->load->database();
     }
 
-    // Ambil semua data cpl
     public function get_performa_index($id = null)
     {
         $this->db->select('
@@ -32,38 +31,56 @@ class Mod_pi extends CI_Model
         $this->db->join('srm_cpl', 'srm_pin.cpl_pin = srm_cpl.idx_cpl', 'left');
         $this->db->join('srm_skf', 'srm_cpl.skf_cpl = srm_skf.idx_skf', 'left');
 
-        // Jika ID diberikan, tambahkan kondisi WHERE
         if ($id !== null) {
-            $this->db->where('srm_pin.cpl_pin', $id);
+            $this->db->where('srm_pin.idx_pin', $id);
         }
 
         $query = $this->db->get();
         return $id !== null ? $query->row_array() : $query->result_array();
     }
 
-    // Tambah data cpl
-    public function add_cpl($data)
+    // Ambil data ina cpl
+    public function get_ina_cpl()
     {
+        $this->db->select('
+        srm_cpl.idx_cpl,
+        srm_cpl.ina_cpl,
+        srm_cpl.nmr_cpl');
+        $this->db->from('srm_cpl');
+
+        // Ensure only unique CPL are selected
+        $this->db->group_by('srm_cpl.idx_cpl');
+
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    // Tambah data pin
+    public function add_pi($data)
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        // Prepare data for insertion
         $data = array(
-            'skf_cpl' => $data['skf_cpl'],
-            'ina_cpl' => $data['ina_cpl'],
-            'eng_cpl' => $data['eng_cpl'],
-            'nmr_cpl' => $data['nmr_cpl']
+            'cpl_pin' => $data['cpl_pin'],
+            'ina_pin' => $data['ina_pin'],
+            'eng_pin' => $data['eng_pin'],
+            'nmr_pin' => $data['nmr_pin'],
+            'ins_pin' => date('Y-m-d H:i:s')
         );
 
-        return $this->db->insert('srm_cpl', $data);
+        return $this->db->insert('srm_pin', $data);
     }
 
-    // Update data cpl
-    public function update_cpl($id, $data)
+    // Update data pin
+    public function update_pi($id, $data)
     {
-        $this->db->where('skf_cpl', $id);
-        return $this->db->update('srm_cpl', $data);
+        $this->db->where('idx_pin', $id);
+        return $this->db->update('srm_pin', $data);
     }
 
-    // Hapus data cpl
-    public function delete_cpl($id)
+    // Hapus data pin
+    public function delete_pi($id)
     {
-        return $this->db->delete('srm_cpl', array('idx_skf' => $id));
+        return $this->db->delete('srm_pin', array('idx_skf' => $id));
     }
 }

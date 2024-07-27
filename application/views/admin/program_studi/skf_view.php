@@ -17,6 +17,12 @@
     <link href="assets/sb-admin/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="assets/sb-admin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <style>
+        .rounded_btn {
+            border-radius: 6px;
+            padding-right: 14px;
+            padding-left: 14px;
+        }
+
         .text-center {
             text-align: center;
         }
@@ -67,7 +73,7 @@
                     <div class="row">
                         <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card border-left-primary shadow-sm h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
@@ -84,10 +90,10 @@
                     </div>
 
                     <!-- Program Studi Table -->
-                    <div class="card shadow mb-4">
+                    <div class="card shadow-sm mb-4">
                         <div class="card-header py-3 d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center">
                             <h6 class="m-0 font-weight-bold text-primary">Daftar Program Studi</h6>
-                            <a href="#" class="btn btn-sm btn-primary mt-2 mt-sm-0" data-bs-toggle="modal" data-bs-target="#addModal">
+                            <a href="#" class="btn btn-sm btn-primary mt-2 mt-sm-0 rounded_btn" data-bs-toggle="modal" data-bs-target="#addModal">
                                 <i class="fas fa-plus mr-2"></i>Tambah Program Studi
                             </a>
                         </div>

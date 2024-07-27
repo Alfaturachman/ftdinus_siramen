@@ -17,6 +17,12 @@
     <link href="assets/sb-admin/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="assets/sb-admin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <style>
+        .rounded_btn {
+            border-radius: 6px;
+            padding-right: 14px;
+            padding-left: 14px;
+        }
+
         .text-center {
             text-align: center;
         }
@@ -67,7 +73,7 @@
                     <div class="row">
                         <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card border-left-primary shadow-sm h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
@@ -84,10 +90,10 @@
                     </div>
 
                     <!-- Performa Index Table -->
-                    <div class="card shadow mb-4">
+                    <div class="card shadow-sm mb-4">
                         <div class="card-header py-3 d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center">
                             <h6 class="m-0 font-weight-bold text-primary">Daftar Performa Index</h6>
-                            <a href="#" class="btn btn-sm btn-primary mt-2 mt-sm-0" data-bs-toggle="modal" data-bs-target="#addCplModal">
+                            <a href="#" class="btn btn-sm btn-primary mt-2 mt-sm-0 rounded_btn" data-bs-toggle="modal" data-bs-target="#addCplModal">
                                 <i class="fas fa-plus mr-2"></i>Tambah Performa Index
                             </a>
                         </div>
@@ -96,11 +102,11 @@
                                 <table id="myTable" class="table table-bordered">
                                     <thead>
                                         <tr>
+                                            <th>Nomor</th>
                                             <th>Program Studi</th>
                                             <th>Deskripsi CPL Indonesia</th>
                                             <th>Deskripsi PI Indonesia</th>
                                             <th>Deskripsi PI Inggris</th>
-                                            <th>Nomor</th>
                                             <th class="aksi-col">Aksi</th>
                                         </tr>
                                     </thead>
@@ -108,13 +114,13 @@
                                         <?php if (!empty($performa_index)) : ?>
                                             <?php foreach ($performa_index as $cpl_item) : ?>
                                                 <tr>
+                                                    <td><?php echo $cpl_item['nmr_pin']; ?></td>
                                                     <td><?php echo $cpl_item['jr2_skf']; ?></td>
                                                     <td><?php echo $cpl_item['ina_cpl']; ?></td>
                                                     <td><?php echo $cpl_item['ina_pin']; ?></td>
                                                     <td><?php echo $cpl_item['eng_pin']; ?></td>
-                                                    <td><?php echo $cpl_item['nmr_pin']; ?></td>
                                                     <td class="aksi-col">
-                                                        <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editCplModal" data-id="<?php echo $cpl_item['skf_cpl']; ?>">
+                                                        <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editPiModal" data-id="<?php echo $cpl_item['idx_pin']; ?>">
                                                             <i class="fas fa-edit"></i> Edit
                                                         </a>
                                                         <a href="#" class="btn btn-danger btn-sm delete-button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="<?php echo site_url('cpl/delete/' . $cpl_item['idx_cpl']); ?>" data-name="<?php echo $cpl_item['ina_cpl']; ?>">
@@ -146,15 +152,14 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="addCplForm" action="<?php echo site_url('cpl/add'); ?>" method="post">
-
+                                <form id="addCplForm" action="<?php echo site_url('performa_index/add'); ?>" method="post">
                                     <div class="form-group">
                                         <label for="addProgramStudi">CPL</label>
-                                        <select class="form-control" id="addProgramStudi" name="skf_cpl" required>
+                                        <select class="form-control" id="addProgramStudi" name="cpl_pin" required>
                                             <option value="" disabled selected>Pilih CPL</option>
-                                            <?php foreach ($performa_index as $ps) : ?>
+                                            <?php foreach ($ina_cpl as $ps) : ?>
                                                 <option value="<?php echo $ps['idx_cpl']; ?>">
-                                                    <?php echo $ps['ina_cpl'] . ', ' . $ps['nmr_cpl'] ?>
+                                                    <?php echo $ps['ina_cpl'] . ' ' . $ps['nmr_cpl'] ?>
                                                 </option>
                                             <?php endforeach; ?>
                                         </select>
@@ -171,7 +176,7 @@
                                         <label for="addNomor">Nomor</label>
                                         <input type="number" class="form-control" id="addNomor" name="nmr_pin" placeholder="Masukkan nomor" required>
                                     </div>
-
+                                    <input type="hidden" name="ins_pin" value="<?php echo date('Y-m-d H:i:s'); ?>">
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -183,40 +188,40 @@
                 </div>
 
                 <!-- Modal Edit -->
-                <div class="modal fade" id="editCplModal" tabindex="-1" role="dialog" aria-labelledby="editCplModalLabel" aria-hidden="true">
+                <div class="modal fade" id="editPiModal" tabindex="-1" role="dialog" aria-labelledby="editPiModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="editCplModalLabel"><strong>Edit CPL</strong></h5>
+                                <h5 class="modal-title" id="editPiModalLabel"><strong>Edit CPL</strong></h5>
                                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="editCplForm" action="<?php echo site_url('cpl/update'); ?>" method="post">
-                                    <input type="hidden" name="id" id="editCplId" value="">
+                                <form id="editPiForm" action="<?php echo site_url('performa_index/update'); ?>" method="post">
+                                    <input type="hidden" name="idx_pin" id="editCplId" value="">
                                     <div class="form-group">
-                                        <label for="addProgramStudi">Program Studi</label>
-                                        <select class="form-control" id="addProgramStudi" name="skf_cpl" required>
-                                            <option value="" disabled>Pilih Program Studi</option>
-                                            <?php foreach ($program_studi as $ps) : ?>
-                                                <option value="<?php echo $ps['idx_skf']; ?>">
-                                                    <?php echo $ps['jr2_skf'] . ', ' . $ps['jjg_skf'] . ', ' . $ps['kde_skf']; ?>
+                                        <label for="editProgramStudi">CPL</label>
+                                        <select class="form-control" id="editProgramStudi" name="cpl_pin" required>
+                                            <option value="" disabled selected>Pilih CPL</option>
+                                            <?php foreach ($ina_cpl as $ps) : ?>
+                                                <option value="<?php echo $ps['idx_cpl']; ?>">
+                                                    <?php echo $ps['ina_cpl'] . ' ' . $ps['nmr_cpl'] ?>
                                                 </option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="editDeskripsiID">Deskripsi Indonesia</label>
-                                        <textarea class="form-control" id="editDeskripsiID" name="ina_cpl" rows="3" placeholder="Masukkan deskripsi dalam bahasa Indonesia" required></textarea>
+                                        <textarea class="form-control" id="editDeskripsiID" name="ina_pin" rows="3" placeholder="Masukkan deskripsi dalam bahasa Indonesia" required></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="editDeskripsiEN">Deskripsi Inggris</label>
-                                        <textarea class="form-control" id="editDeskripsiEN" name="eng_cpl" rows="3" placeholder="Masukkan deskripsi dalam bahasa Inggris" required></textarea>
+                                        <textarea class="form-control" id="editDeskripsiEN" name="eng_pin" rows="3" placeholder="Masukkan deskripsi dalam bahasa Inggris" required></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="editNomor">Nomor</label>
-                                        <input type="number" class="form-control" id="editNomor" name="nmr_cpl" placeholder="Masukkan nomor" required>
+                                        <input type="number" class="form-control" id="editNomor" name="nmr_pin" placeholder="Masukkan nomor" required>
                                     </div>
                                 </form>
                             </div>
@@ -270,24 +275,17 @@
                     }
                 });
 
-                $('#saveAddBtn').on('click', function() {
-                    var idx_sfk = $('#idx_sfk').val();
-                    var kode = $('#addKode').val();
-                    var nama = $('#addNama').val();
-                    var jenjang = $('#addJenjang').val();
-
-                    if (kode === '' || nama === '' || jenjang === '' || idx_sfk === '') {
-                        alert('Harap lengkapi semua field.');
-                        return;
-                    }
+                $('#saveCplBtn').on('click', function() {
+                    var form = $('#addCplForm');
+                    var actionUrl = form.attr('action');
 
                     $.ajax({
-                        url: $('#addForm').attr('action'),
+                        url: actionUrl,
                         type: 'POST',
-                        data: $('#addForm').serialize(),
+                        data: form.serialize(),
                         success: function(response) {
                             if (response.success) {
-                                alert('Program Studi berhasil ditambahkan.');
+                                alert('PI berhasil ditambahkan.');
                                 location.reload();
                             } else {
                                 alert('Terjadi kesalahan: ' + response.error);
@@ -295,7 +293,7 @@
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.error('AJAX Error: ' + textStatus + ': ' + errorThrown);
-                            alert('Terjadi kesalahan saat menghubungi server. Cek console untuk detail.');
+                            alert('Terjadi kesalahan saat menghubungi server. Status: ' + jqXHR.status + ' - ' + jqXHR.responseText);
                         }
                     });
                 });
@@ -304,26 +302,24 @@
             // Edit
             $(document).ready(function() {
                 // Event handler for opening the modal
-                $(document).on('click', '[data-bs-target="#editCplModal"]', function() {
-                    var id = $(this).data('id'); // Get ID from button's data-id attribute
+                $(document).on('click', '[data-bs-target="#editPiModal"]', function() {
+                    var id = $(this).data('id');
 
                     $.ajax({
-                        url: '<?php echo site_url('cpl/edit/'); ?>' + id,
+                        url: '<?php echo site_url('performa_index/edit/'); ?>' + id,
                         method: 'GET',
                         dataType: 'json',
                         success: function(data) {
                             if (data) {
                                 // Fill modal form with data
-                                $('#editCplId').val(data.skf_cpl); // Set hidden ID
-                                $('#editDeskripsiID').val(data.ina_cpl); // Set Indonesian description
-                                $('#editDeskripsiEN').val(data.eng_cpl); // Set English description
-                                $('#editNomor').val(data.nmr_cpl); // Set number
-
-                                // Set the selected value for Program Studi dropdown
-                                $('#addProgramStudi').val(data.skf_cpl);
+                                $('#editCplId').val(data.idx_pin);
+                                $('#editDeskripsiID').val(data.ina_pin);
+                                $('#editDeskripsiEN').val(data.eng_pin);
+                                $('#editNomor').val(data.nmr_pin);
+                                $('#editProgramStudi').val(data.cpl_pin);
 
                                 // Show the modal
-                                $('#editCplModal').modal('show');
+                                $('#editPiModal').modal('show');
                             } else {
                                 alert('Data not found.');
                             }
@@ -335,7 +331,11 @@
                 });
 
                 // Submit form
-                $('#editCplForm').submit(function(event) {
+                $('#saveEditCplBtn').on('click', function() {
+                    $('#editPiForm').submit();
+                });
+
+                $('#editPiForm').submit(function(event) {
                     event.preventDefault();
                     $.ajax({
                         url: $(this).attr('action'),
@@ -344,7 +344,7 @@
                         success: function(response) {
                             if (response.success) {
                                 alert('Data updated successfully.');
-                                $('#editCplModal').modal('hide');
+                                $('#editPiModal').modal('hide');
                                 location.reload();
                             } else {
                                 alert('Failed to update data.');
