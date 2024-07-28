@@ -12,7 +12,6 @@ class Mod_skf extends CI_Model
     // Ambil semua data program studi
     public function get_program_studi($id = null)
     {
-        // Pilih kolom-kolom yang diinginkan dari tabel-tabel yang di-join
         $this->db->select('srm_ipt.jns_ipt, srm_ipt.nma_ipt, srm_sfk.kde_sfk, srm_sfk.idx_sfk, srm_sfk.nma_sfk, srm_skf.*');
         $this->db->from('srm_skf');
         $this->db->join('srm_sfk', 'srm_sfk.idx_sfk = srm_skf.sfk_skf', 'left');

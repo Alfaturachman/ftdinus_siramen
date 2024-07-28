@@ -118,7 +118,7 @@
                                                     <td><?php echo $cpl_item['ina_cpl']; ?></td>
                                                     <td><?php echo $cpl_item['eng_cpl']; ?></td>
                                                     <td class="aksi-col">
-                                                        <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editCplModal" data-id="<?php echo $cpl_item['skf_cpl']; ?>">
+                                                        <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editCplModal" data-id="<?php echo $cpl_item['idx_cpl']; ?>">
                                                             <i class="fas fa-edit"></i> Edit
                                                         </a>
                                                         <a href="#" class="btn btn-danger btn-sm delete-button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="<?php echo site_url('cpl/delete/' . $cpl_item['idx_cpl']); ?>" data-name="<?php echo $cpl_item['ina_cpl']; ?>">
@@ -151,7 +151,6 @@
                             </div>
                             <div class="modal-body">
                                 <form id="addCplForm" action="<?php echo site_url('cpl/add'); ?>" method="post">
-
                                     <div class="form-group">
                                         <label for="addProgramStudi">Program Studi</label>
                                         <select class="form-control" id="addProgramStudi" name="skf_cpl" required>
@@ -175,7 +174,6 @@
                                         <label for="addNomor">Nomor</label>
                                         <input type="number" class="form-control" id="addNomor" name="nmr_cpl" placeholder="Masukkan nomor" required>
                                     </div>
-
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -198,10 +196,10 @@
                             </div>
                             <div class="modal-body">
                                 <form id="editCplForm" action="<?php echo site_url('cpl/update'); ?>" method="post">
-                                    <input type="hidden" name="id" id="editCplId" value="">
+                                    <input type="hidden" name="id" id="editCplId">
                                     <div class="form-group">
-                                        <label for="addProgramStudi">Program Studi</label>
-                                        <select class="form-control" id="addProgramStudi" name="skf_cpl" required>
+                                        <label for="editProgramStudi">Program Studi</label>
+                                        <select class="form-control" id="editProgramStudi" name="skf_cpl" required>
                                             <option value="" disabled>Pilih Program Studi</option>
                                             <?php foreach ($program_studi as $ps) : ?>
                                                 <option value="<?php echo $ps['idx_skf']; ?>">
@@ -267,24 +265,16 @@
             $(document).ready(function() {
                 $('#myTable').DataTable();
 
-                $('#saveAddBtn').on('click', function() {
-                    var idx_sfk = $('#idx_sfk').val();
-                    var kode = $('#addKode').val();
-                    var nama = $('#addNama').val();
-                    var jenjang = $('#addJenjang').val();
-
-                    if (kode === '' || nama === '' || jenjang === '' || idx_sfk === '') {
-                        alert('Harap lengkapi semua field.');
-                        return;
-                    }
+                $('#saveCplBtn').on('click', function() {
+                    var formData = $('#addCplForm').serialize();
 
                     $.ajax({
-                        url: $('#addForm').attr('action'),
+                        url: $('#addCplForm').attr('action'),
                         type: 'POST',
-                        data: $('#addForm').serialize(),
+                        data: formData,
                         success: function(response) {
                             if (response.success) {
-                                alert('Program Studi berhasil ditambahkan.');
+                                alert('CPL berhasil ditambahkan.');
                                 location.reload();
                             } else {
                                 alert('Terjadi kesalahan: ' + response.error);
@@ -300,55 +290,51 @@
 
             // Edit
             $(document).ready(function() {
-                // Event handler for opening the modal
                 $(document).on('click', '[data-bs-target="#editCplModal"]', function() {
-                    var id = $(this).data('id'); // Get ID from button's data-id attribute
-
+                    var id = $(this).data('id');
                     $.ajax({
                         url: '<?php echo site_url('cpl/edit/'); ?>' + id,
                         method: 'GET',
                         dataType: 'json',
                         success: function(data) {
                             if (data) {
-                                // Fill modal form with data
-                                $('#editCplId').val(data.skf_cpl); // Set hidden ID
-                                $('#editDeskripsiID').val(data.ina_cpl); // Set Indonesian description
-                                $('#editDeskripsiEN').val(data.eng_cpl); // Set English description
-                                $('#editNomor').val(data.nmr_cpl); // Set number
-
-                                // Set the selected value for Program Studi dropdown
-                                $('#addProgramStudi').val(data.skf_cpl);
-
-                                // Show the modal
-                                $('#editCplModal').modal('show');
+                                $('#editCplId').val(data.idx_cpl);
+                                $('#editDeskripsiID').val(data.ina_cpl);
+                                $('#editDeskripsiEN').val(data.eng_cpl);
+                                $('#editNomor').val(data.nmr_cpl);
+                                $('#editProgramStudi').val(data.skf_cpl).change();
                             } else {
-                                alert('Data not found.');
+                                alert('Data tidak ditemukan.');
                             }
                         },
                         error: function() {
-                            alert('Error fetching data.');
+                            alert('Kesalahan saat mengambil data.');
                         }
                     });
                 });
 
-                // Submit form
+                $('#saveEditCplBtn').click(function() {
+                    $('#editCplForm').submit();
+                });
+
                 $('#editCplForm').submit(function(event) {
                     event.preventDefault();
                     $.ajax({
                         url: $(this).attr('action'),
                         method: 'POST',
                         data: $(this).serialize(),
+                        dataType: 'json',
                         success: function(response) {
                             if (response.success) {
-                                alert('Data updated successfully.');
+                                alert('Data berhasil diperbarui.');
                                 $('#editCplModal').modal('hide');
                                 location.reload();
                             } else {
-                                alert('Failed to update data.');
+                                alert('Gagal memperbarui data.');
                             }
                         },
                         error: function() {
-                            alert('Error updating data.');
+                            alert('Kesalahan saat memperbarui data.');
                         }
                     });
                 });
